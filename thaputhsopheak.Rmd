@@ -1,0 +1,183 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+1. Write a R code to Generate 6X6 matrix
+
+```{r}
+#(A) using the random numbers between 1 to 100 &amp; generate another 6x6 matrix
+a <- sample(1:100)
+b <- sample(500:600)
+A <- matrix(a, nrow = 6, ncol = 6)
+B <- matrix(b, nrow = 6, ncol = 6)
+A
+B
+```
+a. Find the range of matrices A and B.
+```{r}
+range(A)
+range(B)
+```
+
+b. Find the max value from each row of the matrices A and B.
+```{r}
+apply(A,1,max)
+apply(B,1,max)
+```
+
+c. Find the diagonal values of matrices A&amp;B.
+```{r}
+z <- A / B
+diag(t(z))
+```
+
+d. Multiply matrices A and B
+```{r}
+A %*% B
+```
+
+e. Replace the 4th row of Matrix A with diagonal values of matrix B
+```{r}
+A[4, ] <- diag(t(B))
+```
+
+f. Multiply matrices A &amp; B and store the values on X.
+```{r}
+X <- A %*% B
+```
+
+g. Divide the matrix A with matrix B.
+```{r}
+A / B
+```
+
+2. Create a table using dataframe/tibble with the following categories(a to f)
+
+a. First name,
+b. Second Name,
+c. Age,
+d. Occupation,
+e. Place,
+f. Random numbers( between 1 to 10)
+```{r}
+fn<-c("Pheak","Kimmonyvorn","Dalya","Menghong","Bongrong","Dara","Panha","Jenny","Lynan","Leapheng")
+ln<-c("Am","Chea","Chea","Chean","Daro","Chor","Kit","Sun","Thon","Ty")
+ag<-c(19,19,22,21,20,19,18,19,21,19)
+occ<-c("Student","Student","Student","Student","Student","Student","Student","Student","Student","Student")
+pl<-c("kpc","bcm","pp","pp","sr","pp","kd","btb","bmc","btb")
+rn<-sample(1:10,10,replace = TRUE)
+tabledata<-data.frame(FirstName=fn,LastName=ln,Age=ag,Occupation=occ,Place=pl,RandomNumber=rn)
+tabledata
+
+```
+g. Extract the last column (f)
+```{r}
+last_column<-tabledata$RandomNumber
+last_column
+```
+
+h. Find the sum, mean and length of the extracted colum
+```{r}
+sum(last_column)
+mean(last_column)
+length(last_column)
+```
+
+3.Create a .txt file (Minimum : 150 words) with the latest news (In English) in cambodia from
+the official news agency’s website(link: https://www.khmertimeskh.com/50801787/covid-19-cambodia-relaxes-restrictions-singapore-indonesia-promotes-vaccination-plans/ )
+
+#a. Read the .txt file
+```{r}
+library(tokenizers)
+text <- read.delim("new.txt")
+
+```
+#b. Perform the Tokenization &amp; count the words
+```{r}
+words_text <- paste0(text)
+tokens <- tokenize_words(words_text)
+count <- count_words(words_text)
+count
+```
+#c. Identify the most repeated word and replace that word with “KIT”
+```{r}
+repleated_words <- names(table(tokens))[as.vector(table(tokens))==max(table(tokens))]
+repeated_words_count <- max(table(tokens))
+subs <- gsub("the", "KIT", tokens)
+repleated_words
+repeated_words_count
+subs
+```
+d. Perform the Sentiment analysis
+```{r}
+library("syuzhet")
+library("ggplot2")
+sentiment_analysis <- get_sentiment(tokens, method="syuzhet")
+summary(sentiment_analysis)
+
+```
+
+e. Plot the graph between “words count” and “words” using geom_col()
+e.1. X-axis title =“Number of words”, Size=10, Bold, Text in Blue color,
+Center, space between graph and title = 20.
+```{r}
+ 
+```
+
+4. Find the assigned Dataset from the list below and perform the following
+#a. Import and Clean the dataset.
+```{r}
+dataset <- read.csv("draymond.csv")
+dataset
+#the dataset is already clean there is no NA.
+```
+
+b. Find the x and y variables(axis) from the assigned dataset and give the reason for
+selecting the x and y axis.
+```{r}
+## selecting Player Name as X and Year as Y
+plot <- ggplot(dataset, aes(x=player, y=season)) + 
+    xlab("Player Name") +
+    ylab("Year")
+```
+
+c. Plot the graph using geom_col() and perform the linear model in statistics.
+```{r}
+# using geom_col
+plot <- plot+geom_col()
+
+#perform linear model in smooting
+plot <- plot+geom_smooth(method="lm")
+```
+
+d. Perform the facet with the available columns(Choose the any two variables from the
+columns)
+```{r}
+# use facet with 2 variable by possessions and year
+plot+facet_grid(possessions~season)
+# use facet with 1 variable by the year
+plot <- plot+facet_wrap(~season)
+plot
+```
+
+
+e. Use the theme layer to do the following (Note: Based on dataset, name the x and y axis &amp;
+graph)
+e.1. x-axis title =“________”, Size=10, Bold, Text in Green color, Center, space
+between graph and title = 20.
+e.2. y-axis title =“________”, Size=10, Bold, Text in Yellow color, Center, space
+between graph and title = 20.
+e.3. Graph title =”_________”,Size = 25, Bold, Center, Text in Blue color, space
+between graph and title = 25.
+
+```{r}
+plot <- plot +
+  ggtitle("Possessions") + theme(
+  axis.title.x=element_text(size=10, color="green", face="bold", margin=margin(t=20,r=20,b=0,l=0)),
+  axis.title.y=element_text(size=10, color="yellow", face="bold", margin=margin(t=0,r=20,b=0,l=20)),
+  plot.title=element_text(size=25, color="blue", face="bold", margin=margin(t=25,r=0,b=25,l=0))
+  )
+plot
+
+```
+
